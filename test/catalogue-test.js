@@ -99,4 +99,32 @@ describe("Catalogue", () => {
         expect(rejectedProduct).to.be.undefined; 
       });
     });
+
+
+    describe("searchProduct", function () {
+      it("should find products'price cheaper than €25.01", function () {
+        cat.addProduct(new Product("A129", "Product10", 100, 10, 25.0));
+        const result = cat.searchProduct({price: 25.00});
+        expect(result.productIds).to.have.lengthOf(4);
+        expect(result.productIds).to.have.members(["A123","A124","A125","A129"]);
+      });
+
+      
+      it("should return products with 'sho' in the name", function () {
+        cat.addProduct(new Product("A130", "shoes", 100, 10, 10.0));
+        cat.addProduct(new Product("A131", "shoulder bag", 100, 10, 10.0));
+        const result = cat.searchProduct({keyword: 'sho'});
+        expect(result.productIds).to.have.lengthOf(2);
+        expect(result.productIds).to.have.members(["A130","A131"]);
+      });
+
+
+      it("should throw an exception if the condition object does not have a keyword", function () {
+        
+        expect(() => cat.searchProduct({ keyword: "Widget" })).to.throw("Bad search");
+   
+      });
+      
+    });
+
 });
